@@ -1,20 +1,42 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const path = require('path');
 const helmet = require('helmet');
 const fs = require('fs');
-const filesDir = require('filesDir');
+//const filesDir = require('filesDir');
+const { Sequelize } = require('sequelize');
 
+const sequelize = new Sequelize("rsg", "ericcosquer$", "Determination2021.", {
+    dialect: "mysql",
+    host: "localhost"
+});
 
-const saucesRoute = require('./routes/sauces');
+try {
+    sequelize.authenticate();
+    console.log('Connecté à la base de données MySQL !');
+}   catch (error) {
+    console.log('Impossible de se connecter, erreur suivante :', error);
+};
+
+// const sequelize = new Sequelize("", "ericcosquer$", "Determination2021.", {
+//     dialect: "mysql",
+//     host: "localhost"
+// });
+
+// try {
+//     sequelize.authenticate();
+//     console.log('Connecté à la base de données MySQL !');
+//     sequelize.query("CREATE DATABASE `rsg2`;").then(([results, metadata]) => {
+//         console.log('Base de données créée !');
+//     })
+//     catch (error) {
+//         console.log('Impossible de se connecter, erreur suivante :', error);
+//     }
+// }
+
+const messageRoutes = require('./routes/message');
 const userRoutes = require('./routes/user');
-
-mongoose.connect('mongodb+srv://eric1stusr:Abcdef91@cluster0.7gvrz.mongodb.net/test1?retryWrites=true&w=majority',
-{ useNewUrlParser: true,
-  useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussi !'))
-  .catch(() => console.log('Conneion à MongoDB échouée !'));
+const profilRoute = require('./routes/profil');
 
 const app = express();
 
@@ -30,12 +52,13 @@ app.use(bodyParser.json());
 
 app.use(helmet());
 app.use('/api/auth', userRoutes);
-app.use('/api/sauces', saucesRoute);
+app.use('/api/message', messageRoutes);
+app.use('/api/profil', profilRoute);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 //Permet de créer le dossier images si il n'existe pas
-if (!fs.existsSync(filesDir)) {
-    fs.mkdirSync(filesDir);
-};
+// if (!fs.existsSync(filesDir)) {
+//     fs.mkdirSync(filesDir);
+// };
 
 module.exports = app;
