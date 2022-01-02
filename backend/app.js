@@ -1,101 +1,74 @@
+const first = require('ee-first');
 const express = require('express');
-const { sequelize, User, Post } = require('./models');
+const { sequelize } = require('./models');
+const helmet = require('helmet');
+const fs = require('fs');
+const filesDir = 'images';
+const path = require('path');
 
-const app = express()
-app.use(express.json())
+const userRoute = require('./route/user');
+const postRoute = require('./route/posts');
 
-app.post('/users', async(req, res) => {
-    const { firstName, lastName, email, role } = req.body
+const app = express();
+app.use(express.json());
 
-    try{
-        const user = await User.create({ firstName, lastName, email, role })
-        return res.json(user)
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json(err)
-    }
-})
+app.use(helmet());
 
-app.get('/users', async (req, res) => {
-    try {
-        const users = await User.findAll()
-        return res.json(users)
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json({ error: 'Something went wrong !'})
-    }
-})
+app.use((req, res, next) => {// Cross Origin
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader('Set-Cookie', 'foo=bar; HttpOnly');
+    next();
+});
 
-app.get('/users/:uuid', async (req, res) => {
-    const uuid = req.params.uuid
-    try {
-        const user = await User.findOne({
-            where: { uuid },
-            include: 'posts',
-        })
-        return res.json(user)
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json({ error: 'Something went wrong !'})
-    }
-})
+app.use('/users', userRoute );
 
-app.post('/posts', async (req, res) => {
-    const { userUuid, body } = req.body
-    try {
-        const user = await User.findOne({ where: { uuid: userUuid }})
-        const post = await Post.create({ body, userId: user.id })
-        return res.json(post)
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json({ error: 'Something went wrong !'})
-    }
-})
+app.use('/posts', postRoute );
 
-app.get('/posts', async (req, res) => {
-    try {
-        const posts = await Post.findAll({ include: [{ model: User, as: 'user' }]})
-        return res.json(posts)
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json({ error: 'Something went wrong !'})
-    }
-})
+app.use('/images', express.static(path.join(__dirname, 'images')));
+//Permet de créer le dossier images si il n'existe pas
+if (!fs.existsSync(filesDir)) {
+    fs.mkdirSync(filesDir);
+};
 
-app.put('/users/:uuid', async (req, res) => {
-    const uuid = req.params.uuid
-    const { firstName, lastName, email, role } = req.body
-    try {
-        const user = await User.findOne({ where: { uuid } })
+// app.listen({ port: 3306}, async () => {
+//     console.log('Server up on http://localhost:3306')
+//     await sequelize.authenticate()
+//     console.log('Database Connected !')
+// })
 
-        user.firstName = firstName
-        user.lastName = lastName
-        user.email = email
-        user.role= role
+module.exports = app;
 
-        await user.save()
-        return res.json(user)
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json({ error: 'Something went wrong !'})
-    }
-})
+// app.post('/users', async(req, res) => {// Créer un user
+//     const { userName, password, firstName, lastName, email, role } = req.body
+//     console.log('resultat', userName, password, firstName, lastName, email, role)
+//     try{
+//         const user = await User.create({ 
+//             userName,
+//             password, 
+//             firstName, 
+//             lastName, 
+//             email, 
+//             role })
+//         return res.status(201).json('user created')
+//     } catch(err) {
+//         console.log(err)
+//         return res.status(400).json(err)
+//     }
+// })
 
-app.delete('/users/:uuid', async (req, res) => {
-    const uuid = req.params.uuid
-    try {
-        const user = await User.findOne({ where: { uuid } })
-        await user.destroy()
-        return res.json({ message: 'User deleted!' })
-    } catch(err) {
-        console.log(err)
-        return res.status(400).json({ error: 'Something went wrong !'})
-    }
-})
-
-app.listen({ port: 3306}, async () => {
-    console.log('Server up on http://localhost:3306')
-    await sequelize.authenticate()
-    console.log('Database Connected !')
-})
-    
+// app.get('/login', async(req, res) => {//Login
+//     const { userName, password } = req.body
+//     console.log('resultat', userName, password )
+//     try{
+//         const login = await Login.create({ 
+//             userName, 
+//             password 
+//         })
+//         return res.status(200).json(login)
+//     } catch(err) {
+//         console.log(err)
+//         return res.status(400).json(err)
+//     }
+// })

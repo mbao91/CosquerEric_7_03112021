@@ -2,47 +2,60 @@
     <div class="bbg">
         <img alt="Groupomania logo" src="../assets/icon-above-font.png">
         <div class="carre">
-            <h1>Veuillez entrer votre message ci-dessous :</h1>
             <!-- <Message texte="Veuillez entrer votre message ci-dessous :"/> -->
-            <textarea name="Message" id="message" cols="5" rows="10"></textarea>
+            <h1>Veuillez entrer votre message ci-dessous :</h1>
+            <textarea name="Message" id="message" cols="5" rows="10" v-model="tempMessage"></textarea>
+            <div v-for="message in messages" :key="message" class="pill">
+                {{ message }}
+            </div>
             <div class="valider">
-                <button class="bentry">Entrer</button>
+                <Button type="submit" textButton="Entrer" id='bentry' @click="mounted"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-// // import Button from '../components/Button.vue'
-// // import Message from '../components/Message.vue'
+import Button from '../components/Button.vue'
+// import Message from '../components/Message.vue'
+import axios from 'axios'
 
-// export default {
-//     name: 'Message',
-//     components: { Button },
-//     // data() {
-//     //     return {
-//     //         msg: ''
-//     //     };    
-//     // }
-// }
+export default {
+    name: 'Message',
+    components: { 
+        Button,
+        // Message
+    },
+    data() {
+        return {
+            tempMessage: '',
+            messages: []
+        }
+    },
+    methods: {
+        // addMessage(e) {
+        //     if (e.key === ',' && this.tempMessage) {
+        //         this.messages.push(this.tempMessage)
+        //         this.tempMessage = ''
+        //     }
+        // }
+        mounted() {
+            let message = {
+                message: this.tempMessage
+            }
+            axios
+            .post('http://localhost:3306/message', message)
+            .then(response => console.log(response.data))
+            .catch(error => {console.log('there is an error:' + error.response)})
+        }
+    }
+}
 </script>
 
 <style scoped lang="scss">
-.valider {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    margin-top: 5px;
-    
-}
-// .bbg {
-//     background-color: yellow;
-// }
-.bentry {
-    border-radius: 2px;
-    background-color: rgb(6, 66, 6);
-    color: white;
-    padding: 2px 50px;
+.bbg {
+    // background-color: yellow;
+    background-image: url('../assets/icon.png');
 }
 .carre {
     display: flex;
@@ -53,6 +66,19 @@
     background-color: #24e78e;
     position: relative;
 }
+.valider {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 5px;
+    
+}
+// .bentry {
+//     border-radius: 2px;
+//     background-color: rgb(6, 66, 6);
+//     color: white;
+//     padding: 2px 50px;
+// }
 h1 {
     color: red;
 }

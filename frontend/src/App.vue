@@ -3,14 +3,37 @@
   <div id="nav">
     <!-- <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> | -->
-    <router-link to="/inscription">Inscription</router-link> |
-    <router-link to="/profil">Profil</router-link> |
-    <router-link to="/message">Message</router-link> |
-    <router-link to="/multimedia">Multimédia</router-link>
+    <div v-if="!isLogged">
+      <router-link to="/inscription">Inscription</router-link> |
+      <router-link to="/connexion">Connexion</router-link>
+    </div>
+    <div v-if="isLogged">
+      <router-link to="/profil">Profil</router-link> | 
+      <router-link to="/message">Message</router-link> | 
+      <router-link to="/multimedia">Multimédia</router-link>
+    </div>
   </div>
-  <router-view/>
+  <router-view @test="test()"/>
 </div>
 </template>
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
+      isLogged: false,
+    };
+  },
+  methods: {
+    test() {
+      this.isLogged = localStorage.getItem('isLogged');
+    },
+  },
+  mounted() {
+    this.isLogged = localStorage.getItem('isLogged');
+  }
+}
+</script>
 
 <style lang="scss">
 body {
