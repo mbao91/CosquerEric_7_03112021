@@ -1,4 +1,4 @@
-const Post = require('../models/post');
+const Post = require('../models/posts');
 const fs = require('fs');
 
 exports.createPost = async (req, res) => {// Créer un message

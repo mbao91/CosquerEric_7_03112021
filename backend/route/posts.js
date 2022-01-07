@@ -15,6 +15,6 @@ router.get('/', auth, postCtrl.findAllPost);// Trouver tous les messages
 
 router.put('/:id', auth, multer, postCtrl.modifyPost);// Modifier un message
 
-router.delete('/:id', auth, postCtrl.deleteOnePost);// Supprimer un message
+router.delete('/:id', auth, postCtrl.deletePost);// Supprimer un message
 
 module.exports = router;

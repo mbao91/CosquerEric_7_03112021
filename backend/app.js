@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const fs = require('fs');
 const filesDir = 'images';
 const path = require('path');
+const cors = require('cors')
 
 const userRoute = require('./route/user');
 const postRoute = require('./route/posts');
@@ -13,6 +14,8 @@ const app = express();
 app.use(express.json());
 
 app.use(helmet());
+
+app.use(cors());
 
 app.use((req, res, next) => {// Cross Origin
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,11 +35,11 @@ if (!fs.existsSync(filesDir)) {
     fs.mkdirSync(filesDir);
 };
 
-// app.listen({ port: 3306}, async () => {
-//     console.log('Server up on http://localhost:3306')
-//     await sequelize.authenticate()
-//     console.log('Database Connected !')
-// })
+app.listen({ port: 3306}, async () => {
+    console.log('Server up on http://localhost:3306')
+    await sequelize.authenticate()
+    console.log('Database Connected !')
+})
 
 module.exports = app;
 
