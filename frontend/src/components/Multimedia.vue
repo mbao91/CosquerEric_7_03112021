@@ -1,16 +1,16 @@
 <template>
   <li>
-    <span>{{ todo.text }}</span>
-    <button @click.prevent="$emit('remove', todo)">Remove</button>
+    <span>{{ video.file }}</span>
+    <button @click.prevent="$emit('remove', video)">Remove</button>
   </li>
 </template>
 
 <script>
 export default {
   props: {
-    todo: {
+    video: {
       required: true,
-      type: String
+      type: File
     }
   }
 }

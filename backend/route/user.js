@@ -6,11 +6,12 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 router.post('/signup', userCtrl.signup);//Créer un user
-router.post('/login', userCtrl.login);//Login
+router.post('/login', userCtrl.login);//Log in
+// router.get('/logout', userCtrl.logout);//Log out
 
-router.get('/:id', auth, userCtrl.findOneUser);// Trouver un user
+router.get('/:id', auth, userCtrl.getOneUser);// Trouver un user
 
-router.get('/', auth, userCtrl.findAllUser);// Trouver tous les users
+router.get('/', auth, userCtrl.getAllUser);// Trouver tous les users
 
 router.put('/:id', auth, multer, userCtrl.modifyUser);// Modifier un user
 

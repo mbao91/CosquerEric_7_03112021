@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
+    userName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,6 +33,13 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'User must have a firstName' },
         notEmpty: { msg: 'firstName must not be empty' }
       }
+    },
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+      // validate: {
+      //   is: /[0-9a-z]{64}$/i
+      // }
     },
     lastName: {
       type: DataTypes.STRING,
@@ -44,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'User must have a email' },
         notEmpty: { msg: 'email must not be empty' },
-        isEmail: { msg: 'Must be a valid email address' }
+        isEmail: true 
       }
     },
     role: {

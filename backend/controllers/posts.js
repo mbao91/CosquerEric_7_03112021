@@ -1,4 +1,5 @@
-const Post = require('../models/posts');
+// const Post = require('../models/posts');
+const { sequelize, Post } = require('../models')
 const fs = require('fs');
 
 exports.createPost = async (req, res) => {// Créer un message
@@ -16,11 +17,11 @@ exports.createPost = async (req, res) => {// Créer un message
     }
 }
 
-exports.findOnePost = async (req, res) => {// Trouver un message
+exports.getOnePost = async (req, res) => {// Trouver un message
     const uuid = req.params.uuid
     try {
         const post = await Post.findOne({ 
-            where: { uuid }, 
+            // where: { uuid }, 
             include: 'user',
         })
         return res.status(200).json(post)
@@ -30,7 +31,7 @@ exports.findOnePost = async (req, res) => {// Trouver un message
     }
 }
 
-exports.findAllPost = async (req, res) => {// Trouver tous les messages
+exports.getAllPost = async (req, res) => {// Trouver tous les messages
     try {
         const posts = await Post.findAll({ 
             include: [{ 

@@ -1,8 +1,6 @@
 <template>
 <div id="app">
   <div id="nav">
-    <!-- <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> | -->
     <div v-if="!isLogged">
       <router-link to="/inscription">Inscription</router-link> |
       <router-link to="/connexion">Connexion</router-link>
@@ -22,7 +20,7 @@ export default {
   data() {
     return {
       isLogged: false,
-    };
+    }
   },
   methods: {
     test() {
@@ -44,7 +42,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-image: url('./assets/icon.png');
+  // background-image: url('./assets/icon.png');
   color: #2c3e50;
 }
 

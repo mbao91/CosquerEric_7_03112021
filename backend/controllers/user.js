@@ -1,17 +1,20 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const { sequelize, User } = require('../models')
 const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {//Signin up
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
+            console.log('mot de passe :', hash);
             const user = new User({
                 userName: req.body.userName,
                 password: hash,
                 email: req.body.email,
                 firstName: req.body.firstName,
-                lastName: req.body.lastName
+                lastName: req.body.lastName,
+                role: req.body.role
             });
+        console.log(user);
         user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch(error => res.status(400).json({ error }));
@@ -20,11 +23,13 @@ exports.signup = (req, res, next) => {//Signin up
 };
 
 exports.login = (req, res, next) => {//Login
-    User.findOne({ userName: req.body.userName })
+    console.log(req.body.userName)
+    User.findOne({ where: {userName: req.body.userName}})
     .then(user => {
     if (!user) {
      return res.status(401).json({ error: 'Utilisateur non trouvé !' });
     }
+    console.log('user trouvé:  ', user);
     bcrypt.compare(req.body.password, user.password)
     .then(valid => {
       if (!valid) {
@@ -44,7 +49,7 @@ exports.login = (req, res, next) => {//Login
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.findOneUser = async (req, res) => {// Trouver un user
+exports.getOneUser = async (req, res) => {// Trouver un user
     const uuid = req.params.uuid
     try {
         const user = await User.findOne({
@@ -58,7 +63,7 @@ exports.findOneUser = async (req, res) => {// Trouver un user
     }
 }
 
-exports.findAllUser = async (req, res) => {// Trouver tous les users
+exports.getAllUser = async (req, res) => {// Trouver tous les users
     try {
         const users = await User.findAll()
         return res.status(200).json(users)

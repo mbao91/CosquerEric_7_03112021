@@ -1,92 +1,109 @@
 <template>
-    <div class="bbg">
-        <img alt="Groupomania logo" src="../assets/icon-above-font.png">
-        <div class="carre">
-            <!-- <Message texte="Veuillez entrer votre message ci-dessous :"/> -->
-            <h1>Veuillez entrer votre message ci-dessous :</h1>
-            <textarea name="Message" id="message" cols="5" rows="10" v-model="tempMessage"></textarea>
-            <div v-for="message in messages" :key="message" class="pill">
-                {{ message }}
-            </div>
-            <div class="valider">
-                <Button type="submit" textButton="Entrer" id='bentry' @click="mounted"/>
-            </div>
-        </div>
-    </div>
+  <div class="wrapper">
+    <h1>Postez votre message ci-dessous.</h1>
+    <form @submit.prevent="addTodo">
+      <input type="text" name="todo-text" v-model="newTodoText" placeholder="New todo">
+    </form>
+    <ul v-if="todos.length">
+      <Message v-for="todo in todos" :key="todo.id" :todo="todo" @remove="removeTodo"/>
+    </ul>
+    <p class="none" v-else>Nothing left in the list. Add a new todo in the input above.</p>
+    <Button type="text" id='green' textButton='Deconnexion' @click="disconnect"/>
+  </div>
 </template>
 
 <script>
-import Button from '../components/Button.vue'
-// import Message from '../components/Message.vue'
-import axios from 'axios'
+import Message from "../components/Message.vue"
+import Button from "../components/Button.vue"
+// import axios from 'axios'
+
+let nextTodoId = 1
+
+const createTodo = text => ({
+  text,
+  id: nextTodoId++
+})
 
 export default {
-    name: 'Message',
-    components: { 
-        Button,
-        // Message
-    },
-    data() {
-        return {
-            tempMessage: '',
-            messages: []
-        }
-    },
-    methods: {
-        // addMessage(e) {
-        //     if (e.key === ',' && this.tempMessage) {
-        //         this.messages.push(this.tempMessage)
-        //         this.tempMessage = ''
-        //     }
-        // }
-        mounted() {
-            let message = {
-                message: this.tempMessage
-            }
-            axios
-            .post('http://localhost:3306/message', message)
-            .then(response => console.log(response.data))
-            .catch(error => {console.log('there is an error:' + error.response)})
-        }
+  components: {
+    Message,
+    Button
+  },
+
+  data() {
+    return {
+      todos: [
+        // createTodo("Learn Vue"),
+        // createTodo("Learn about single-file components"),
+        // createTodo("Fall in love ❤️")
+        ""
+      ],
+
+      newTodoText: ""
     }
+  },
+
+  methods: {
+    addTodo() {
+      const trimmedText = this.newTodoText.trim()
+
+      if (trimmedText) {
+        this.todos.push(createTodo(trimmedText))
+      }
+
+      this.newTodoText = ""
+    },
+
+    removeTodo(item) {
+      this.todos = this.todos.filter(todo => todo !== item)
+    },
+
+    disconnect() {
+        localStorage.setItem('isLogged', false)
+        this.$router.push('Connexion')
+    //     axios.get('http://localhost:3306/users/')
+    //     .then(res => {
+    //         console.log(res.status)
+    //         if(res.status === 200) {
+    //         localStorage.setItem('isLogged', false)
+    //         console.log(res.data)
+    //     }   else {
+    //         console.log('something went wrong !')
+    //     }
+    //   })
+    //   this.$emit('test')
+    //   this.$router.push('Connexion')
+    }
+  }
 }
 </script>
 
-<style scoped lang="scss">
-.bbg {
-    // background-color: yellow;
-    background-image: url('../assets/icon.png');
+<style lang="scss">
+*, *::before, *::after {
+  box-sizing: border-box;
 }
-.carre {
-    display: flex;
-    flex-direction: column;
-    margin: 0% 25%;
-    border: 1px solid grey;
-    padding: 25px;
-    background-color: #24e78e;
-    position: relative;
+html, body {
+  font: 16px/1.2 BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 10px;
 }
-.valider {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-top: 5px;
-    
+.wrapper {
+  width: 75%;
+  margin: 0 auto;
 }
-// .bentry {
-//     border-radius: 2px;
-//     background-color: rgb(6, 66, 6);
-//     color: white;
-//     padding: 2px 50px;
-// }
-h1 {
-    color: red;
+form {
+  margin-bottom: 20px;
 }
-img {
-    height: 300px;
-    width: 300px;
-    margin: -60px;
-    z-index: -1;
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #777;
 }
-
+ul, li {
+  margin: 0;
+  padding: 0;
+}
+p.none {
+  color: #888;
+  font-size: small;
+}
 </style>

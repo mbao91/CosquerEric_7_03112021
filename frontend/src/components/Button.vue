@@ -29,4 +29,10 @@ button#green {
     background-color: #168300;
     padding: 10px 5%;
 }
+button#bentry {
+    border-radius: 2px;
+    background-color: rgb(6, 66, 6);
+    color: white;
+    padding: 2px 50px;
+}
 </style>

@@ -27,13 +27,11 @@
 import Button from '../components/Button.vue'
 import axios from 'axios'
 
-window.axios = require('axios');
+// window.axios = require('axios');
 
 export default {
     name: 'Inscription',
-    components: { 
-        Button
-    },
+    components: { Button },
     data() { 
         return {
             userName: '',
@@ -42,8 +40,6 @@ export default {
             firstName: '',
             lastName: '',
             role: 'Employee'
-            // inscription: '',
-            //utiliser axios
         }
     },
     methods: { 
@@ -57,13 +53,15 @@ export default {
                 role: this.role,
             };
             axios
-                .post('http://localhost:3306/users', user)
-                .then(response => console.log(response.data))
-                .catch(error => {console.log('there is an error:' + error.response)})
-            // axios
-            //     .fetch('http://localhost:3306/connexion')
-            //     .then(response => console.log(response.data))
-            //     .catch(error => {console.log('there is an error:' + error.response)})
+                .post('http://localhost:3306/users/signup/', user)
+                .then(res => {
+                    if (res.code === 201) {
+                        this.$router.push('Connexion'),
+                        console.log(res.data.user)
+                    }
+                })
+                .catch(error => {console.log('there is an error:' + error.res)
+            }) 
         }
     }
 }
@@ -113,20 +111,4 @@ img {
     margin: -60px;
     z-index: -1;
 }
-// Button{
-//     border-radius: 20px;
-//     border: 1px thin lightgrey;
-//     color: white; 
-//     font-weight: bold;
-//         &#blue {
-//         background-color: #166fe5;
-//         // margin: 0% 5%;
-//         padding: 10px 20%;
-//         &#green {
-//         background-color: #168300;
-//         // margin: 0% 15%;
-//         padding: 10px 0;
-//         }
-//     }
-// }
 </style>
