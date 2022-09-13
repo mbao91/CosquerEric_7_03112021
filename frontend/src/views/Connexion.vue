@@ -3,8 +3,8 @@
         <img alt="Groupomania logo" src="../assets/icon-above-font.png"/>
         <h1>Se connecter ci-dessous</h1>
         <div class="carre">
-            <label for="username"></label>
-            <input type="text" id="username" placeholder="Nom d'utilisateur" v-model='userName'>
+            <label for="email"></label>
+            <input type="email" id="email" required placeholder="Email" v-model='email'>
             <label for="pw"></label>
             <input type="password" id="pw" placeholder="Mot de passe" v-model='password'>
             <Button type="text" id='blue' textButton='Connexion' @click="connect"/>
@@ -23,17 +23,17 @@ export default {
     components: { Button },
     data() { 
         return {
-            userName: '',
+            email: '',
             password: '',           
         };
     },
     methods: { 
         connect() {
             let user = {
-                userName: this.userName,
+                email: this.email,
                 password: this.password,
             }
-            axios.post('http://localhost:3306/users/login', user)
+            axios.post('http://localhost:3306/user/login', user)
             .then(res => {
                 console.log(res.status)
                 if (res.status === 200) {

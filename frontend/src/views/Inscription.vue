@@ -53,10 +53,10 @@ export default {
                 role: this.role,
             };
             axios
-                .post('http://localhost:3306/users/signup/', user)
+                .post('http://localhost:3306/user/signup/', user)
                 .then(res => {
                     if (res.code === 201) {
-                        this.$router.push('Connexion'),
+                        this.$router.push('Connexion')
                         console.log(res.data.user)
                     }
                 })

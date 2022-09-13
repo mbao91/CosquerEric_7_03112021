@@ -1,35 +1,13 @@
-'use strict';
-const { Model } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Post extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate({ User }) {
-      // define association here
-      // userId
-      this.belongsTo(User, { foreignKey: 'userId', as: 'user' })
-    }
+const mongoose = require('mongoose');
 
-    toJSON(){
-      return { ...this.get(), id: undefined, userId: undefined }
-    }
-  };
-  Post.init({
-    uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
-    },
-    body: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-  }, {
-    sequelize,
-    tableName: 'posts',
-    modelName: 'Post',
-  });
-  return Post;
-};
+const postsSchema = mongoose.Schema({
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    imageUrl: { type: String, required: true },
+    likes: { type: Number, required: true },
+    dislikes: { type: Number, required: true },
+    usersLiked: { type: Array, required: true },
+    usersDisliked: { type: Array, required: true },
+});
+
+module.exports = mongoose.model('Posts', postsSchema);
