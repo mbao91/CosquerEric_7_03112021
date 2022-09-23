@@ -18,14 +18,14 @@
                 <option value="Employee">Employé(e)</option>
                 <option value="SuperAdmin">Administrateur</option>
             </select>
-            <Button type="submit" id='green' textButton='Créer un compte' @click="create"/>
+            <Button type="submit" id='green' textButton='Créer un compte' @click="signup"/>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Button from '../components/Button.vue'
-import axios from 'axios'
 
 // window.axios = require('axios');
 
@@ -43,7 +43,10 @@ export default {
         }
     },
     methods: { 
-        create() {
+        ...mapActions({
+            _signup: 'signup',
+        }),
+        signup() {
             let user = {
                 userName: this.userName,
                 password: this.password,
@@ -52,16 +55,9 @@ export default {
                 email: this.email,
                 role: this.role,
             };
-            axios
-                .post('http://localhost:3306/user/signup/', user)
-                .then(res => {
-                    if (res.code === 201) {
-                        this.$router.push('Connexion')
-                        console.log(res.data.user)
-                    }
-                })
-                .catch(error => {console.log('there is an error:' + error.res)
-            }) 
+            this._signup(user).then((res) => {
+                if (res.status === 201) this.$router.push('connexion');
+            });
         }
     }
 }

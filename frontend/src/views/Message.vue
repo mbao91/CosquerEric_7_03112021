@@ -9,20 +9,14 @@
       <Message v-for="todo in todos" :key="todo.id" :todo="todo" @remove="removeTodo"/>
     </ul>
     <p class="none" v-else>Aucun message. Veuillez ajourter un message dans le champs ci-dessus.</p>
-    <Button type="text" id='green' textButton='Deconnexion' @click="disconnect"/>
   </div>
 </template>
 
 <script>
-import Message from "../components/Message.vue"
-import Button from "../components/Button.vue"
-import axios from 'axios'
+import Message from "../components/Message.vue";
 
 export default {
-  components: {
-    Message,
-    Button
-  },
+  components: { Message },
 
   data() {
     return {
@@ -31,24 +25,7 @@ export default {
     }
   },
 
-  methods: {
-    addTodo() {
-      console.log('test');
-      axios.post('http://localhost:3306/post/', this.post)
-            .then(res => {
-                console.log(res.status)
-                if (res.status === 200) {
-                    console.log(res.data)
-                } else {
-                    console.log('mauvais login');
-                }
-            })
-            .catch(error => {console.log('there is an error:' + error.response.status + error.response.request)})
-    },
-
-    removeTodo(item) {
-      this.todos = this.todos.filter(todo => todo !== item)
-    },
+  methods: {    
   },
 }
 </script>

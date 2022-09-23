@@ -1,34 +1,36 @@
 <template>
-<div id="app">
-  <div id="nav">
-    <div v-if="!isLogged">
-      <router-link to="/inscription">Inscription</router-link> |
-      <router-link to="/connexion">Connexion</router-link>
+  <div id="app">
+    <div id="nav">
+      <div>
+        <router-link to="/inscription">Inscription</router-link> |
+        <router-link to="/connexion">Connexion</router-link>
+      </div>
+      <div>
+        <router-link to="/message">Message</router-link>
+        <Button textButton="Déconnexion" @click="logout"/>
+      </div>
     </div>
-    <div v-if="isLogged">
-      <router-link to="/profil">Profil</router-link> | 
-      <router-link to="/message">Message</router-link> | 
-      <router-link to="/multimedia">Multimédia</router-link>
-    </div>
+    <router-view/>
   </div>
-  <router-view @test="test()"/>
-</div>
 </template>
+
 <script>
+import { mapActions } from 'vuex';
+import Button from '@/components/Button';
+
 export default {
   name: 'App',
-  data() {
-    return {
-      isLogged: false,
-    }
-  },
+  components: { Button },
   methods: {
-    test() {
-      this.isLogged = localStorage.getItem('isLogged');
-    },
+      ...mapActions({
+          _logout: 'logout',
+      }),
+      logout() {
+        this._logout();
+        this.$router.push('connexion');
+      }
   },
   mounted() {
-    this.isLogged = localStorage.getItem('isLogged');
   }
 }
 </script>

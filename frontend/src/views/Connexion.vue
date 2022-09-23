@@ -7,7 +7,7 @@
             <input type="email" id="email" required placeholder="Email" v-model='email'>
             <label for="pw"></label>
             <input type="password" id="pw" placeholder="Mot de passe" v-model='password'>
-            <Button type="text" id='blue' textButton='Connexion' @click="connect"/>
+            <Button type="text" id='blue' textButton='Connexion' @click="login"/>
             <p>Mot de passe oublié ?</p>
         </div>
         <!-- <Message texte='coucou'/> -->
@@ -15,8 +15,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Button from '../components/Button.vue'
-import axios from 'axios'
 
 export default {
     name: 'Connexion',
@@ -28,23 +28,20 @@ export default {
         };
     },
     methods: { 
-        connect() {
+        ...mapActions({
+            _login: 'login',
+        }),
+        login() {
             let user = {
                 email: this.email,
                 password: this.password,
             }
-            axios.post('http://localhost:3306/user/login', user)
-            .then(res => {
-                console.log(res.status)
+            this._login(user).then((res) => {
                 if (res.status === 200) {
                     localStorage.setItem('isLogged', true)
-                    this.$router.push('Message')
-                    console.log(res.data)
-                } else {
-                    console.log('mauvais login');
+                    this.$router.push('Message');
                 }
-            })
-            .catch(error => {console.log('there is an error:' + error.response.status + error.response.request)})
+            });
         }
     },
 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button :id="id">{{ textButton }}</button>
+        <button>{{ textButton }}</button>
     </div>
 </template>
 
@@ -9,7 +9,6 @@ export default {
     name: 'Button',
     props: {
         textButton: String,
-        id: String,
     }
 }
 </script>

@@ -17,16 +17,6 @@ const routes = [
     name: 'Message',
     component: () => import(/* webpackChunkName: "message" */ '../views/Message.vue')
   },
-  {
-    path: '/multimedia',
-    name: 'Multimedia',
-    component: () => import(/* webpackChunkName: "multimedia" */ '../views/Multimedia.vue')
-  },
-  {
-    path: '/profil',
-    name: 'Profil',
-    component: () => import(/* webpackChunkName: "profil" */ '../views/Profil.vue')
-  }
 ]
 
 const router = createRouter({
