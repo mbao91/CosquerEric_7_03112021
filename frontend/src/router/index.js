@@ -5,7 +5,6 @@ const routes = [
     path: '/connexion',
     name: 'Connexion',
     component: () => import(/* webpackChunkName: "inscription" */ '../views/Connexion.vue')
-    // component: Login
   },
   {
     path: '/inscription',

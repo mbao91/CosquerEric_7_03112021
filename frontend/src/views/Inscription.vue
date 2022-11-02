@@ -18,7 +18,7 @@
                 <option value="Employee">Employé(e)</option>
                 <option value="SuperAdmin">Administrateur</option>
             </select>
-            <Button type="submit" id='green' textButton='Créer un compte' @click="signup"/>
+            <Button type="submit" id='green' textButton='Créer un compte' @click="signUp"/>
         </div>
     </div>
 </template>
@@ -44,9 +44,9 @@ export default {
     },
     methods: { 
         ...mapActions({
-            _signup: 'signup',
+            _signUp: 'signUp',
         }),
-        signup() {
+        signUp() {
             let user = {
                 userName: this.userName,
                 password: this.password,
@@ -55,7 +55,7 @@ export default {
                 email: this.email,
                 role: this.role,
             };
-            this._signup(user).then((res) => {
+            this._signUp(user).then((res) => {
                 if (res.status === 201) this.$router.push('connexion');
             });
         }

@@ -9,8 +9,9 @@
             <input type="password" id="pw" placeholder="Mot de passe" v-model='password'>
             <Button type="text" id='blue' textButton='Connexion' @click="login"/>
             <p>Mot de passe oublié ?</p>
+            <span>Pas inscrit ? </span><br>
+            <Button type="text" id='blue' textButton='Inscription' @click="goToInscription"/>
         </div>
-        <!-- <Message texte='coucou'/> -->
     </div>
 </template>
 
@@ -37,13 +38,14 @@ export default {
                 password: this.password,
             }
             this._login(user).then((res) => {
-                if (res.status === 200) {
-                    localStorage.setItem('isLogged', true)
-                    this.$router.push('Message');
-                }
+                if (res.status === 200) this.$router.push('Message');
             });
-        }
-    },
+        },
+        goToInscription() {
+            localStorage.clear()
+            this.$router.push('Inscription')
+        },
+    }
 }
 </script>
 

@@ -11,6 +11,10 @@ const defaultUser = {
   token: ''
 }
 
+const defaultPost = {
+  postId: -1,
+}
+
 // Si l'utilisateur n'est pas dans le local storage, l'utilisateur est par défaut
 // Sinon récupérer l'utilisateur du local storage
 let user = localStorage.getItem('user');
@@ -25,16 +29,31 @@ if (!user) {
   }
 }
 
+let post = localStorage.getItem('post');
+if (!post) {
+  post = defaultPost;
+} else {
+  try {
+  post = JSON.parse(post);
+  } catch(exception) {
+  post = defaultPost;
+  }
+}  
+
 export default new Vuex.Store({
   state: {
       isLogged: false,
       user: user,
+      post: post,
   },
 
   getters: {
-    userName: state => {
-      return state.user.userName;
+    userId: state => {
+      return state.user.userId;
     },
+    postId: state => {
+      return state.post.postId;
+    }
   },
 
   mutations: {
@@ -54,7 +73,7 @@ export default new Vuex.Store({
 
   actions: {
     // S'inscrire
-    signup(_context, userInfos) {
+    signUp(_context, userInfos) {
       return new Promise((resolve, reject) => {
         server.post('user/signup', userInfos)
             .then(function(response) {
@@ -84,6 +103,70 @@ export default new Vuex.Store({
       commit('LOG_OUT');
       // Supprimer l'utilisateur du local storage
       localStorage.removeItem('users');
+    },
+
+    //ajouter un message
+    addMsg(_context, msgInfos) {
+      return new Promise((resolve, reject) => {
+        server.post('post', msgInfos)
+            .then(function(response) {
+              resolve(response);
+            })
+            .catch(function(error) {
+              reject(error);
+            })
+      });
+    },
+
+    //load un message
+    loadMsg(_context, postId) {
+      return new Promise((resolve, reject) => {
+        server.get('post/:id', postId)
+            .then(function(response) {
+              resolve(response);
+            })
+            .catch(function(error) {
+              reject(error);
+            })
+      });
+    },
+    //load tous les messages
+    loadAllMsg() {
+          return new Promise((resolve, reject) => {
+            server.get('post')
+                .then(function(response) {
+                  resolve(response);
+                })
+                .catch(function(error) {
+                  reject(error);
+                })
+          });
+        },
+
+    //modifier un message
+    modifyMsg(_context, postId, msgInfos ) {
+      return new Promise((resolve, reject) => {
+        server.put('post/:id' + postId, msgInfos)
+            .then(function(response) {
+              resolve(response);
+            })
+            .catch(function(error) {
+              reject(error);
+            })
+      });
+    },
+
+    //supprimer un message
+    deleteMsg(_context, postId) {
+      return new Promise((resolve, reject) => {
+        server.delete('post/' + postId)
+            .then(function(response) {
+              resolve(response);
+            })
+            .catch(function(error) {
+              reject(error);
+            })
+      });
     },
   },
 })

@@ -1,18 +1,18 @@
-const Post = require('../models/posts');
+const Post = require('../models/post');
 const fs = require('fs');
 
 exports.createPost = (req, res, next) => { //Création de l'objet
-    const postObject = JSON.parse(req.body.post);
-    console.log('createPost', req.body);
-    delete postObject._id;
+    console.log('createPost', req.body); 
+    console.log('test1');
     const post = new Post({
-        ...postObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        userId: req.body.userId,
+        content: req.body.post,
         dislikes: 0,
         likes: 0,
         usersLiked: [],
         usersDisliked: [],
     });
+    console.log('tet2')
     post.save()
     .then(() => res.status(201).json({ message: "Post créé et enregistré" }))
     .catch(error => res.status(400).json({ error }));
@@ -20,7 +20,7 @@ exports.createPost = (req, res, next) => { //Création de l'objet
 
 exports.getAllPosts = (req, res, next) => { /*Renvoie un tableau de
     toutes les potst de la base de données.*/
-    Posts.find()
+    Post.find()
     .then((posts) => res.status(200).json( posts ))
     .catch(error => res.status(400).json({ error }));
 };
@@ -75,7 +75,7 @@ exports.likePosts = (req, res, next) => {
 exports.modifyPost = (req, res, next) => { //Modification de l'objet
     const postObject = req.file ? {
         ...JSON.parse(req.body.post),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        //imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
     Post.updateOne({ _id: req.params.id },
     { ...postObject, _id: req.params.id })
@@ -84,14 +84,14 @@ exports.modifyPost = (req, res, next) => { //Modification de l'objet
 };
 
 exports.deletePost = (req, res, next) => { //Suppression d'un objet
+    console.log(req.params);
     Post.findOne({ _id: req.params.id})
-    .then(post => {
-        const filename = post.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
+    .then(() => {
+        /*const filename = post.imageUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {*/
             Post.deleteOne({ _id: req.params.id })
             .then(() => res.status(200).json({ message: 'Deleted!'}))
             .catch(error => res.status(400).json({ error }));
-        });
-    })
+        })
     .catch(error => res.status(500).json({ error }));
 };

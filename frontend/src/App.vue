@@ -3,6 +3,9 @@
     <div id="nav">
       <div>
         <router-link to="/inscription">Inscription</router-link> |
+        <router-link to="/connexion">Connexion</router-link> 
+      </div>
+      <div>
         <router-link to="/connexion">Connexion</router-link>
       </div>
       <div>
@@ -21,6 +24,13 @@ import Button from '@/components/Button';
 export default {
   name: 'App',
   components: { Button },
+  data() {
+    return {
+      showInstruction: false,
+      showHome: false,
+      showMessage: false,
+    }
+  },
   methods: {
       ...mapActions({
           _logout: 'logout',
@@ -28,7 +38,7 @@ export default {
       logout() {
         this._logout();
         this.$router.push('connexion');
-      }
+    },
   },
   mounted() {
   }
