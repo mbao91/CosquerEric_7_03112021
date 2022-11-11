@@ -9,7 +9,7 @@ router.post('/', multer, postsCtrl.createPost);
 
 router.post('/:id/like', multer, postsCtrl.likePosts);
 
-router.get('/', postsCtrl.getAllPosts);
+router.get('/', auth, postsCtrl.getAllPosts);
  
 router.get('/:id', postsCtrl.getOnePost);
 

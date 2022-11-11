@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <div id="nav">
-      <div>
+      <div v-if="!isLogged">
         <router-link to="/inscription">Inscription</router-link> |
-        <router-link to="/connexion">Connexion</router-link> 
-      </div>
-      <div>
         <router-link to="/connexion">Connexion</router-link>
       </div>
       <div>
-        <router-link to="/message">Message</router-link>
-        <Button textButton="Déconnexion" @click="logout"/>
+        <router-link to="/admin">Admin</router-link> |
+        <router-link to="/user">User</router-link>
+      </div>
+      <div>
+        <router-link to="/messages">Tous les messages</router-link> |
+        <router-link to="/create">Create</router-link> |
+        <router-link to="/modify">Modifier</router-link>
+        <Button textButton="Déconnexion" id='green' @click="logout"/>
       </div>
     </div>
     <router-view/>
@@ -18,18 +21,16 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import Button from '@/components/Button';
+import { mapActions, mapGetters } from 'vuex';
+import Button from './components/Button';
 
 export default {
   name: 'App',
   components: { Button },
-  data() {
-    return {
-      showInstruction: false,
-      showHome: false,
-      showMessage: false,
-    }
+  computed: {
+    ...mapGetters({
+        isLogged: 'isLogged',
+    }),
   },
   methods: {
       ...mapActions({
@@ -38,9 +39,20 @@ export default {
       logout() {
         this._logout();
         this.$router.push('connexion');
+      },
+      /*{
+        if(showConnexion) {
+          showAdmin = false,
+          showMessage = false
+        } else if(showAdmin) {
+          showConnexion = false,
+          showMessage = false
+        } else(showMessage) {
+          showMessage = true
+        }
+      }*/
     },
-  },
-  mounted() {
+    mounted() {
   }
 }
 </script>

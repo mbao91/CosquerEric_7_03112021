@@ -38,12 +38,11 @@ export default {
                 password: this.password,
             }
             this._login(user).then((res) => {
-                if (res.status === 200) this.$router.push('Message');
+                if (res.status === 200) this.$router.push('messages');
             });
         },
         goToInscription() {
-            localStorage.clear()
-            this.$router.push('Inscription')
+            this.$router.push('inscription')
         },
     }
 }

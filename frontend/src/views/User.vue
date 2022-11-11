@@ -1,5 +1,5 @@
 <template>
-  <span>{{ picture.content }}</span>
+  <div></div>
 </template>
 
 <script>
@@ -12,6 +12,6 @@ data() {
 }
 </script>
 
-<style>
+<style lang: scss>
 
 </style>

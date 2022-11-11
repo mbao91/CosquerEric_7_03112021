@@ -1,48 +1,45 @@
 <template>
   <div class="wrapper">
     <h1>Postez votre message ci-dessous.</h1>
-    <form>
-      <input type="text" v-model="post" placeholder="New todo">
-      <div class=buttonright>
-        <button @click="addMsg()">créer</button>
-      </div>
-    </form>
+    <Button id='blue' textButton="créer" @click.prevent="createMsg()"/>
     <ul v-if="posts.length > 0">
-      <Message v-for="post in posts" :key="post.id" :post="post"
-        @modifySuccessful="loadAllMsg()" @deleteSuccessful="loadAllMsg()"/>
+      <Messages v-for="post in posts" :key="post.id" :post="post"
+        @modify="modifyMsg(post)" @deleteSuccessful="loadAllMsg()" @addSuccessful="loadAllMsg()"/>
     </ul>
-    <p class="none" v-else>Aucun message. Veuillez ajourter un message dans le champs ci-dessus.</p>
+    <p class="none" v-else>Aucun message</p>
   </div>
 </template>
 
 <script>
-import Message from "../components/Message.vue";
+import Messages from "../components/Messages.vue";
+import Button from "../components/Button.vue";
 import { mapActions, mapGetters } from 'vuex';
 export default {
-  components: { Message },
-
+  components: { Messages, Button },
   data() {
     return {
       posts: [],
-      post: ""
+      post:""
+      
     }
   },
   computed: {
     ...mapGetters({
-        _userId: 'userId',
-        _postId: 'postId',
+        _userId: 'userId'
     }),
   },
-
   methods: {  
     ...mapActions({
+        //_createMsg: 'createMsg',
         _addMsg: 'addMsg',
         _loadMsg: 'loadMsg',
         _loadAllMsg: 'loadAllMsg',
-        /*_loadOneMsg: 'loadOneMsg',*/
         _modifyMsg: 'modifyMsg',
         _deleteMsg: 'deleteMsg',
-    }),  
+    }),
+    createMsg() {
+      this.$router.push('Create')
+    },
     addMsg() {
         this._addMsg({ post: this.post, userId: this._userId }, this.post="").then(() => this.loadAllMsg());
     },
@@ -52,17 +49,18 @@ export default {
     loadAllMsg() {
         this._loadAllMsg().then((response) => this.posts = response.data);
     },
-    /*loadOneMsg() {
-        this._loadOneMsg().then((response) => this.post._id = response.data);
-    },*/
-    modifyMsg(postId) {
-        this._modifyMsg(postId)({ postId: this._postId, userId: this._userId}).then(() => this.loadAllMsg());
+    modifyMsg(post) {
+      console.log('modifyMsg', post)
+      //this._modifyMsg(postId)({ postId: this._postId, userId: this._userId}).then(() => this.loadAllMsg());
+
+      this.$router.push({ name: 'Modify', params: { post: post } })
     },
     deleteMsg() {
         this._deleteMsg()({ postId: this._postId, userId: this._userId}).then(() => this.loadAllMsg());
-    }
+    },
   },
   mounted() {
+    console.log('le composant <Messages> vient detre mounted');
     this.loadAllMsg();
   },
 }
@@ -96,7 +94,6 @@ p.none {
   color: #888;
   font-size: small;
 }
-
 .buttonright {
   display: flex;
   justify-content: flex-end;

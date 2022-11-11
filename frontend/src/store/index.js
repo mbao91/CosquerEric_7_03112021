@@ -11,10 +11,6 @@ const defaultUser = {
   token: ''
 }
 
-const defaultPost = {
-  postId: -1,
-}
-
 // Si l'utilisateur n'est pas dans le local storage, l'utilisateur est par défaut
 // Sinon récupérer l'utilisateur du local storage
 let user = localStorage.getItem('user');
@@ -29,30 +25,22 @@ if (!user) {
   }
 }
 
-let post = localStorage.getItem('post');
-if (!post) {
-  post = defaultPost;
-} else {
-  try {
-  post = JSON.parse(post);
-  } catch(exception) {
-  post = defaultPost;
-  }
-}  
-
 export default new Vuex.Store({
   state: {
       isLogged: false,
-      user: user,
-      post: post,
+      isAdmin: false,
+      user: user
   },
 
   getters: {
     userId: state => {
       return state.user.userId;
     },
-    postId: state => {
-      return state.post.postId;
+    isAdmin: state => {
+      return state.user.isAdmin;
+    },
+    isLogged: state => {
+      return state.isLogged;
     }
   },
 
@@ -85,7 +73,7 @@ export default new Vuex.Store({
       });
     },
 
-    //Se connecter
+    //se connecter
     login({ commit }, userInfos) {
       return new Promise((resolve, reject) => {
         server.post('user/login', userInfos)
@@ -99,11 +87,25 @@ export default new Vuex.Store({
       });
     },
 
+    //se déconnecter
     logout({ commit }) {
       commit('LOG_OUT');
       // Supprimer l'utilisateur du local storage
       localStorage.removeItem('users');
     },
+
+    //ajouter un message
+    /*createMsg(_context, postId) {
+      return new Promise((resolve, reject) => {
+        server.post('post', postId)
+          .then(function(response) {
+            resolve(response);
+          })
+          .catch(function(error) {
+            reject(error);
+          })
+      });
+    },*/
 
     //ajouter un message
     addMsg(_context, msgInfos) {

@@ -1,11 +1,8 @@
 <template>
   <li>
     <span>{{ post.content }}</span>
-    <input v-if="isEditMode" type="text" v-model="postVmodel" placeholder="test">
-    <button v-if="!isEditMode" @click.prevent="this.isEditMode = true">Modify</button>
-    <button v-if="!isEditMode" @click.prevent="deleteMsg()">Remove</button>
-    <button v-if="isEditMode" @click.prevent="validate()">Valider</button>
-    <button v-if="isEditMode" @click.prevent="this.isEditMode = false">Annuler</button>
+    <button v-if="amIOwner" @click.prevent="modifyMsg()">Modify</button>
+    <button v-if="amIOwner" @click.prevent="deleteMsg()">Remove</button>
   </li>
 </template>
 
@@ -15,7 +12,6 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      isEditMode: false,
       postVmodel: '',
     };
   },
@@ -26,28 +22,26 @@ export default {
   },
   computed: {
     ...mapGetters({
-      _userId: 'userId',
-      _postId: 'postId',
+      userId: 'userId',
+      isAdmin: 'isAdmin',
     }),
+    amIOwner() {
+      return (this.post.userId === this.userId) || this.isAdmin;
+    }
   },
   methods: {
     ...mapActions({
-      _modifyMsg: 'modifyMsg',
       _deleteMsg: 'deleteMsg',
     }),
+    modifyMsg() {
+      this.$router.push('modify');
+    },
     deleteMsg() {
       this._deleteMsg(this.post._id).then(() => {
         //émettre un evenement au parent 'deleteSuccessful'
-        this.$emit('deleteSuccessful')
+        this.$emit('addSuccessful')
       });
     },
-    validate() {
-      this._modifyMsg(this.post._id).then(() => {
-        //émettre un evenement au parent 'modifySuccessful'
-        this.$emit('modifySuccessful'),
-        this.isEditMode = false
-      });
-    }
   }
 }
 </script>

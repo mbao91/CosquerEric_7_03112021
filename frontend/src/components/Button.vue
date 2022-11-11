@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button>{{ textButton }}</button>
+        <button :id='id'>{{ textButton }}</button>
     </div>
 </template>
 
@@ -9,24 +9,31 @@ export default {
     name: 'Button',
     props: {
         textButton: String,
+        id: String
     }
 }
 </script>
 
-<style>
+<style lang='scss'>
 button{
     border-radius: 20px;
     border: 1px thin lightgrey;
-    color: white; 
     font-weight: bold;
+    cursor: pointer;
+    
 }
 button#blue {
     background-color: #166fe5;
-    padding: 10px 25%;
+    padding: 8px 15%;
+    margin-bottom: 10px;
+    margin-top: -5px;
+    color: white
 }
 button#green {
     background-color: #168300;
-    padding: 10px 5%;
+    padding: 5px 5%;
+    margin: 5px;
+    
 }
 button#bentry {
     border-radius: 2px;

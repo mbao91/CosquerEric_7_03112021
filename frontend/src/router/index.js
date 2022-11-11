@@ -12,9 +12,30 @@ const routes = [
     component: () => import(/* webpackChunkName: "inscription" */ '../views/Inscription.vue')
   },
   {
-    path: '/message',
-    name: 'Message',
-    component: () => import(/* webpackChunkName: "message" */ '../views/Message.vue')
+    path: '/messages',
+    name: 'Messages',
+    component: () => import(/* webpackChunkName: "message" */ '../views/Messages.vue')
+  },
+  {
+    path: '/modify',
+    name: 'Modify',
+    props: true,
+    component: () => import(/* webpackChunkName: "mofify" */ '../views/Modify.vue')
+  },
+  {
+    path: '/create',
+    name: 'Create',
+    component: () => import(/* webpackChunkName: "create" */ '../views/Create.vue')
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import(/* webpackChunkName: "admin" */ '../views/Admin.vue')
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: () => import(/* webpackChunkName: "user" */ '../views/User.vue')
   },
 ]
 
